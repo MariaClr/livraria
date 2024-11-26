@@ -1,0 +1,56 @@
+import livro from "../model/Livro.js";
+
+class LivroController {
+    static async teste(req, res){
+        res.status(200).send("teste maria clara")
+    }
+    static async listarLivros (req, res) {
+        try {
+          const listaLivros = await livro.find({});
+          res.status(200).json(listaLivros);
+        } catch (erro) {
+          res.status(500).json({ message: `${erro.message} - falha na requisição do livro` });
+        }
+      };
+      static async listarLivroPorId (req, res) {
+        try {
+          const id = req.params.id;
+          const livroEncontrado = await livro.findById(id);
+          res.status(200).json(livroEncontrado);
+        } catch (erro) {
+          res.status(500).json({ message: `${erro.message} - falha na requisição do livro` });
+        }
+      };
+
+    static async cadastrarLivro(req, res){
+        try{
+            const novoLivro = await livro.create(req.body)
+            // passando o create diretamente ele ja cria e salva
+            res.status(201).json({message:"criado com sucesso", livro: novoLivro });
+            
+        }catch(erro){
+            res.status(500).json({message: `${erro.message} - falha ao cadastrar livro`});
+        }
+    };
+
+    static async atualizarLivro (req, res) {
+        try {
+          const id = req.params.id;
+          await livro.findByIdAndUpdate(id, req.body);
+          res.status(200).json({message: "livro atualizado"});
+        } catch (erro) {
+          res.status(500).json({ message: `${erro.message} - falha na atualizacao` });
+        }
+      };
+
+      static async removerLivro(req, res){
+        try{
+            const id = req;params.id;
+            await livro.findByIdAndDelete(Number(id))
+            res.status(200).json({message:"livro removido"});
+        }catch (erro){
+            res.status(500).json({message: `${erro.message} - falha na remocao` });
+        }
+      };
+}
+export default LivroController;
